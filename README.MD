@@ -8,27 +8,23 @@ dotnet dev-certs https --trust
 
 ```
 
+Экспорт сертификата:
+
 ```bash
 
 dotnet dev-certs https --export-path ~/.aspnet/https/aspnetapp.pfx -p 12345678
 
 ```
 
-start Docker Containers from YAML file by running:
+Сборка и запуск контейнеров Docker:
 
 ```bash
 
 docker-compose build
-
-```
-
-```bash
-
 docker-compose up -d 
 
 ```
-
-
+Применение миграций базы данных:
 
 ```bash 
 
@@ -36,13 +32,15 @@ dotnet ef database update --project Teledoc.Infrastructure/Teledoc.Infrastructur
 
 ```
 
+Запуск API:
+
 ```bash
 
 docker-compose up -d 
 
 ```
 
-API Working on https://localhost:7110/swagger/index.html
+API доступен по адресу: https://localhost:7110/swagger/index.html
 
 # Requirements
 
