@@ -14,6 +14,8 @@ services:
       - sqlserver-data:/var/opt/mssql
     networks:
       - teledoc-network
+    expose:
+      - '1433'
       
      
   teledoc-api:
@@ -25,14 +27,14 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=teledoc-sqlserver;Database=teledoc;User Id=SA;Password=Password1234;TrustServerCertificate=True;
     ports:
-      - "7110:443" # Маппинг порта для HTTPS
+      - "7110:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443  # Использование HTTPS в контейнере
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx  # Путь к сертификату
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345678  # Пароль к сертификату
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345678
     volumes:
-      - ~/.aspnet/https:/https:ro  # Монтируем сертификаты
+      - ~/.aspnet/https:/https:ro
     networks:
       - teledoc-network
       
