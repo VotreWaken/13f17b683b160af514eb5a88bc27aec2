@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
+﻿using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
 using Teledoc.SharedKernel;
 
 namespace Teledoc.Domain.BoundedContexts.ClientManagement.Events.Founder
@@ -12,11 +7,11 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Events.Founder
 	{
 		public int FounderId { get; }
 		public INN INN { get; }
-		public string FullName { get; }
+		public UserFullName FullName { get; }
 		public DateTime CreatedAt { get; }
 
-		public FounderCreatedEvent(int founderId, INN inn, 
-			string fullName, DateTime createdAt)
+		public FounderCreatedEvent(int founderId, INN inn,
+			UserFullName fullName, DateTime createdAt)
 		{
 			FounderId = founderId;
 			INN = inn;

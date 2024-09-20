@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions
+﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions
 {
 	public class DomainException : Exception
 	{

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
+﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
 {
 	public enum ClientTypeEnum
 	{
@@ -26,6 +20,7 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
 
 		public static ClientType FromEnum(ClientTypeEnum type)
 		{
+			Console.WriteLine($"Type: {type}");
 			return type switch
 			{
 				ClientTypeEnum.LegalEntity => LegalEntity,
@@ -34,8 +29,26 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
 			};
 		}
 
+		public static ClientType FromString(string type)
+		{
+			Console.WriteLine($"Type Value: {type}");
+
+			if (string.IsNullOrEmpty(type))
+			{
+				throw new ArgumentException("Client type cannot be null or empty.");
+			}
+
+			return type switch
+			{
+				"LegalEntity" => LegalEntity,
+				"IndividualEntrepreneur" => IndividualEntrepreneur,
+				_ => throw new ArgumentException("Invalid client type string", nameof(type))
+			};
+		}
+
 		public static ClientType FromValue(int value)
 		{
+			Console.WriteLine($"Mapping ClientTypeEnum: {value}");
 			return FromEnum((ClientTypeEnum)value);
 		}
 

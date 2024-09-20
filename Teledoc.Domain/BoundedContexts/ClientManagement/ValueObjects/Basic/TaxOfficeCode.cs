@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
+﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
 {
     public class TaxOfficeCode
     {

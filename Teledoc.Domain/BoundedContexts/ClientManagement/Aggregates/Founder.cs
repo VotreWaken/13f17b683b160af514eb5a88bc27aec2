@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Teledoc.Domain.BoundedContexts.ClientManagement.Events.Founder;
+﻿using Teledoc.Domain.BoundedContexts.ClientManagement.Events.Founder;
 using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
 using Teledoc.SharedKernel;
 
@@ -13,22 +8,23 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 	{
 		public int Id { get; private set; }
 		public INN INN { get; private set; }
-		public string FullName { get; private set; }
+		public UserFullName FullName { get; private set; }
 		public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 		public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 
 		#region Aggregate Methods
 
-		public Founder(INN inn, string fullName)
+		public Founder(INN inn, string firstname, string lastname, string patronymic)
 		{
 			INN = inn;
-			FullName = fullName;
+			FullName = (UserFullName)CheckAndAssign(UserFullName.Create(firstname, lastname, patronymic));
 			RaiseEvent(new FounderCreatedEvent(Id, INN, FullName, CreatedAt));
 		}
 
-		public void UpdateFounder(string fullName)
+		public void UpdateFounder(INN inn, string firstname, string lastname, string patronymic)
 		{
-			FullName = fullName;
+			INN = inn;
+			FullName = (UserFullName)CheckAndAssign(UserFullName.Create(firstname, lastname, patronymic));
 			UpdatedAt = DateTime.UtcNow;
 			RaiseEvent(new FounderUpdatedEvent(Id, INN, FullName, UpdatedAt));
 		}
