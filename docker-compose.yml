@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+
+  teledoc-mssql-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: teledoc-sqlserver
+    environment:
+      SA_PASSWORD: "Password1234"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - teledoc-network
+      
+     
+  teledoc-api:
+    build:
+      context: .
+      dockerfile: Teledoc.API/Dockerfile
+    depends_on:
+      - teledoc-mssql-db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=teledoc-sqlserver;Database=teledoc;User Id=SA;Password=Password1234;TrustServerCertificate=True;
+    ports:
+      - "7110:443" # Маппинг порта для HTTPS
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443  # Использование HTTPS в контейнере
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx  # Путь к сертификату
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345678  # Пароль к сертификату
+    volumes:
+      - ~/.aspnet/https:/https:ro  # Монтируем сертификаты
+    networks:
+      - teledoc-network
+      
+volumes:
+  sqlserver-data:
+    driver: local
+    
+    
+networks:
+  teledoc-network:
+    driver: bridge
