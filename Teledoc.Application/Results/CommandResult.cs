@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Teledoc.Application.Results
+﻿namespace Teledoc.Application.Results
 {
 	public class CommandResult
 	{
@@ -47,7 +41,7 @@ namespace Teledoc.Application.Results
 			=> new CommandResult(FailureTypes.BusinessRule, reason);
 		public static CommandResult BusinessFail(List<string> reasons)
 			=> new CommandResult(FailureTypes.BusinessRule, reasons);
-		public static CommandResult NotFound(Guid aggregateId)
-			=> new CommandResult(FailureTypes.NotFound, aggregateId);
+		public static CommandResult NotFound(int aggregateId)
+			=> new CommandResult(FailureTypes.NotFound, aggregateId.ToString());
 	}
 }

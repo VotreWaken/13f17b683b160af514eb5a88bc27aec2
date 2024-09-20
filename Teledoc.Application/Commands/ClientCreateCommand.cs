@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using Teledoc.Application.Results;
 
 namespace Teledoc.Application.Commands
 {
-	public class ClientCreateCommand : IRequest<int>
+	public class ClientCreateCommand : IRequest<CommandResult>
 	{
 		public string INN { get; set; }
 		public string Name { get; set; }

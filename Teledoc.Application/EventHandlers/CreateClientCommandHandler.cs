@@ -1,45 +1,56 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Teledoc.Application.Commands;
+using Teledoc.Application.Results;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
 using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.EventHandlers
 {
-	public class CreateClientCommandHandler : IRequestHandler<ClientCreateCommand, int>
+	public class CreateClientCommandHandler : IRequestHandler<ClientCreateCommand, CommandResult>
 	{
 		private readonly IClientRepository _clientRepository;
 		private readonly IFounderRepository _founderRepository;
-		public CreateClientCommandHandler(IClientRepository clientRepository, IFounderRepository founderRepository)
+		private readonly IMapper _mapper;
+		public CreateClientCommandHandler(IClientRepository clientRepository, IFounderRepository founderRepository, IMapper mapper)
 		{
 			_clientRepository = clientRepository;
 			_founderRepository = founderRepository;
+			_mapper = mapper;
 		}
 
-		public async Task<int> Handle(ClientCreateCommand request, CancellationToken cancellationToken)
+		public async Task<CommandResult> Handle(ClientCreateCommand request, CancellationToken cancellationToken)
 		{
-			var client = new Domain.BoundedContexts.ClientManagement.Aggregates.Client(
+			try
+			{
+				var client = CreateClient(request);
+
+				var clientEntity = _mapper.Map<Teledoc.Infrastructure.Entities.Client>(client);
+
+				var clientId = await _clientRepository.AddClientAsync(clientEntity);
+
+				await AddFoundersAsync(request.Founders, clientId);
+
+				return CommandResult.Success(clientId);
+			}
+			catch (DomainException ex)
+			{
+				return CommandResult.BusinessFail(ex.Message);
+			}
+		}
+
+
+		private Domain.BoundedContexts.ClientManagement.Aggregates.Client CreateClient(ClientCreateCommand request)
+		{
+			return new Domain.BoundedContexts.ClientManagement.Aggregates.Client(
 				request.INN,
 				request.Name,
 				request.ClientType
 			);
-
-			var clientTypeEntity = ClientTypeMapper.ToEntity(client.ClientType.Value);
-			Console.WriteLine(clientTypeEntity.Name.ToString());
-			Console.WriteLine(clientTypeEntity.Id.ToString());
-			Console.WriteLine(client.ClientType.Value.ToString());
-
-			Teledoc.Infrastructure.Entities.Client clientEntity = new Infrastructure.Entities.Client
-			{
-				INN = client.INN.ToString(),
-				Name = client.Name,
-				ClientTypeId = clientTypeEntity.Id,
-				// ClientType = clientTypeEntity,
-				CreatedAt = DateTime.UtcNow,
-				UpdatedAt = DateTime.UtcNow,
-			};
-
-			var clientId = await _clientRepository.AddClientAsync(clientEntity);
-
-			foreach (var founder in request.Founders)
+		}
+		private async Task AddFoundersAsync(IEnumerable<FounderCreateCommand> founders, int clientId)
+		{
+			foreach (var founder in founders)
 			{
 				var founderEntity = new Infrastructure.Entities.Founder
 				{
@@ -52,8 +63,6 @@ namespace Teledoc.Application.EventHandlers
 
 				await _founderRepository.AddFounderAsync(founderEntity);
 			}
-
-			return clientId;
 		}
 	}
 }

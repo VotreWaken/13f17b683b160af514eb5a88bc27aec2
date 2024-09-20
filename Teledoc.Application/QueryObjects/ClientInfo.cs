@@ -1,5 +1,4 @@
-﻿using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
-using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
+﻿using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
 using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
 
 namespace Teledoc.Application.QueryObjects

@@ -1,31 +1,40 @@
 ﻿using MediatR;
 using Teledoc.Application.Commands;
+using Teledoc.Application.Results;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
 using Teledoc.Infrastructure.DataContext;
+using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.EventHandlers
 {
-	public class DeleteClientCommandHandler : IRequestHandler<ClientDeleteCommand, Unit>
+	public class DeleteClientCommandHandler : IRequestHandler<ClientDeleteCommand, CommandResult>
 	{
-		private readonly ClientDbContext _context;
+		private readonly IClientRepository _clientRepository;
 
-		public DeleteClientCommandHandler(ClientDbContext context)
+		public DeleteClientCommandHandler(IClientRepository clientRepository)
 		{
-			_context = context;
+			_clientRepository = clientRepository;
 		}
 
-		public async Task<Unit> Handle(ClientDeleteCommand request, CancellationToken cancellationToken)
+		public async Task<CommandResult> Handle(ClientDeleteCommand request, CancellationToken cancellationToken)
 		{
-			var client = await _context.Clients.FindAsync(request.Id);
-
-			if (client == null)
+			try
 			{
-				throw new KeyNotFoundException($"Client with Id {request.Id} not found.");
+				var client = await _clientRepository.GetClientByIdAsync(request.Id);
+
+				if (client == null)
+				{
+					return CommandResult.NotFound(request.Id);
+				}
+
+				await _clientRepository.DeleteClientAsync(request.Id);
+
+				return CommandResult.Success();
 			}
-
-			_context.Clients.Remove(client);
-			await _context.SaveChangesAsync(cancellationToken);
-
-			return Unit.Value;
+			catch (DomainException ex)
+			{
+				return CommandResult.BusinessFail(ex.Message);
+			}
 		}
 	}
 }

@@ -1,9 +1,9 @@
 ﻿using MediatR;
-using Teledoc.Infrastructure.Entities;
+using Teledoc.Application.Results;
 
 namespace Teledoc.Application.Queries
 {
-	public class GetAllProductsInfosQuery : IRequest<IEnumerable<Client>>
+	public class GetAllProductsInfosQuery : IRequest<CommandResult>
 	{
 	}
 }

@@ -1,82 +1,90 @@
 ﻿using MediatR;
-using Teledoc.Infrastructure.DataContext;
 using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
 using Teledoc.Infrastructure.Repository;
-using Microsoft.EntityFrameworkCore;
+using Teledoc.Application.Results;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
+using static Teledoc.Application.Commands.ClientUpdateCommand;
+using AutoMapper;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
 
 namespace Teledoc.Application.Commands
 {
-	public class UpdateClientCommandHandler : IRequestHandler<ClientUpdateCommand, Unit>
+	public class UpdateClientCommandHandler : IRequestHandler<ClientUpdateCommand, CommandResult>
 	{
 		private readonly IClientRepository _clientRepository;
 		private readonly IFounderRepository _founderRepository;
+		private readonly IMapper _mapper;
 
-		public UpdateClientCommandHandler(IClientRepository context, IFounderRepository founderRepository)
+		public UpdateClientCommandHandler(IClientRepository context, IFounderRepository founderRepository, IMapper mapper)
 		{
 			_clientRepository = context;
 			_founderRepository = founderRepository;
+			_mapper = mapper;
 		}
 
-		public async Task<Unit> Handle(ClientUpdateCommand request, CancellationToken cancellationToken)
+		public async Task<CommandResult> Handle(ClientUpdateCommand request, CancellationToken cancellationToken)
 		{
-			var client = await _clientRepository.GetClientByIdAsync(request.Id);
-			if (client == null)
+			try
 			{
-				// throw new NotFoundException(nameof(Client), request.Id);
-			}
+				var clientEntity = await _clientRepository.GetClientByIdAsync(request.Id);
 
-			client.INN = request.INN;
-			client.Name = request.Name;
-			if (Enum.TryParse(request.ClientType, out ClientTypeEnum clientTypeEnum))
-			{
-				var clientTypeEntity = ClientTypeMapper.ToEntity(clientTypeEnum);
-				client.ClientType = clientTypeEntity;
-			}
-			else
-			{
-				throw new ArgumentException("Invalid client type", nameof(request.ClientType));
-			}
-
-			if (request.Founders != null)
-			{
-				var existingFounders = client.Founders.ToList();
-				foreach (var founder in existingFounders)
+				if (clientEntity == null)
 				{
-					if (!request.Founders.Any(f => f.Id == founder.Id))
-					{
-						await _founderRepository.DeleteFounderAsync(founder.Id);
-					}
+					return CommandResult.NotFound(request.Id);
 				}
 
-				foreach (var founder in request.Founders)
+				Console.WriteLine($"Client Type Id: {clientEntity.ClientTypeId}");
+
+				var client = new Client(clientEntity.INN, clientEntity.Name, clientEntity.ClientTypeId);
+
+				client.UpdateClient(request.INN, request.Name, request.ClientType);
+
+				await _clientRepository.UpdateClientAsync(_mapper.Map<Teledoc.Infrastructure.Entities.Client>(client));
+
+				await UpdateFoundersAsync(clientEntity, request.Founders);
+
+				return CommandResult.Success();
+			}
+			catch (DomainException ex)
+			{
+				return CommandResult.BusinessFail(ex.Message);
+			}
+		}
+
+		private async Task UpdateFoundersAsync(Infrastructure.Entities.Client client, IEnumerable<FounderUpdateCommand> founders)
+		{
+			var existingFounders = client.Founders.ToList();
+
+			foreach (var founder in existingFounders)
+			{
+				if (!founders.Any(f => f.Id == founder.Id))
 				{
-					var founderEntity = existingFounders.FirstOrDefault(f => f.Id == founder.Id);
-					if (founderEntity != null)
-					{
-						founderEntity.INN = founder.INN;
-						founderEntity.FullName = founder.FullName;
-						founderEntity.UpdatedAt = DateTime.UtcNow;
-					}
-					else
-					{
-						var newFounder = new Infrastructure.Entities.Founder
-						{
-							INN = founder.INN,
-							FullName = founder.FullName,
-							ClientId = client.Id,
-							CreatedAt = DateTime.UtcNow,
-							UpdatedAt = DateTime.UtcNow,
-						};
-						client.Founders.Add(newFounder);
-					}
+					await _founderRepository.DeleteFounderAsync(founder.Id);
 				}
 			}
 
-			client.UpdatedAt = DateTime.UtcNow;
-
-			await _clientRepository.UpdateClientAsync(client);
-
-			return Unit.Value;
+			foreach (var founder in founders)
+			{
+				var founderEntity = existingFounders.FirstOrDefault(f => f.Id == founder.Id);
+				if (founderEntity != null)
+				{
+					founderEntity.INN = founder.INN;
+					founderEntity.FullName = founder.FullName;
+					founderEntity.UpdatedAt = DateTime.UtcNow;
+				}
+				else
+				{
+					var newFounder = new Infrastructure.Entities.Founder
+					{
+						INN = founder.INN,
+						FullName = founder.FullName,
+						ClientId = client.Id,
+						CreatedAt = DateTime.UtcNow,
+						UpdatedAt = DateTime.UtcNow,
+					};
+					client.Founders.Add(newFounder);
+				}
+			}
 		}
 	}
 }

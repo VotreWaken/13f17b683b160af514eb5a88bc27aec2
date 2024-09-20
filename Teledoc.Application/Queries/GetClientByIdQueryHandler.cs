@@ -1,9 +1,11 @@
 ﻿using MediatR;
+using Teledoc.Application.Results;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
 using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.Queries
 {
-	public class GetClientByIdQueryHandler : IRequestHandler<GetClientByIdQuery, Teledoc.Infrastructure.Entities.Client>
+	public class GetClientByIdQueryHandler : IRequestHandler<GetClientByIdQuery, CommandResult>
 	{
 		private readonly IClientRepository _clientRepository;
 
@@ -12,9 +14,16 @@ namespace Teledoc.Application.Queries
 			_clientRepository = context;
 		}
 
-		public async Task<Teledoc.Infrastructure.Entities.Client> Handle(GetClientByIdQuery request, CancellationToken cancellationToken)
+		public async Task<CommandResult> Handle(GetClientByIdQuery request, CancellationToken cancellationToken)
 		{
-			return await _clientRepository.GetClientByIdAsync(request.Id);
+			try
+			{
+				return CommandResult.Success(await _clientRepository.GetClientByIdAsync(request.Id));
+			}
+			catch (DomainException ex)
+			{
+				return CommandResult.BusinessFail(ex.Message);
+			}
 		}
 	}
 }
