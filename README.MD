@@ -1,6 +1,6 @@
 # Build 
 
-Создайте сертификат для работы с HTTPS протоколом
+Создание сертификата для HTTPS:
 
 ```bash
 
@@ -18,15 +18,27 @@ start Docker Containers from YAML file by running:
 
 ```bash
 
-docker-compose
+docker-compose build
 
 ```
 
-Navigate into the \foodtruacker.Framework\Authentication directory and run the following command:
+```bash
+
+docker-compose up -d 
+
+```
+
+
 
 ```bash 
 
-dotnet ef database update
+dotnet ef database update --project Teledoc.Infrastructure/Teledoc.Infrastructure.csproj --startup-project Teledoc.API/Teledoc.API.csproj
+
+```
+
+```bash
+
+docker-compose up -d 
 
 ```
 
