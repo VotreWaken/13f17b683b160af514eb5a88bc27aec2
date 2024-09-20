@@ -5,13 +5,13 @@ using Teledoc.Infrastructure.Configuration;
 
 namespace Teledoc.API.Extensions
 {
-	public static class OrderSqlServerServiceExtensions
+	public static class ClientSqlServerServiceExtensions
 	{
-		public static IServiceCollection AddOrderServices(this IServiceCollection services, ClientConfiguration settings)
+		public static IServiceCollection AddClientServices(this IServiceCollection services, ClientConfiguration settings)
 		{
 			var connectionString = new SqlConnectionStringBuilder()
 			{
-				DataSource = settings.Url,
+				DataSource = $"{settings.Url},{settings.Port}",
 				InitialCatalog = settings.Database,
 				UserID = settings.Username,
 				Password = settings.Password,
@@ -29,9 +29,8 @@ namespace Teledoc.API.Extensions
 		}
 
 
-		public static IApplicationBuilder UseOrderSqlServerMigration(this IApplicationBuilder app, ClientDbContext context)
+		public static IApplicationBuilder UseClientSqlServerMigration(this IApplicationBuilder app, ClientDbContext context)
 		{
-			context.Database.EnsureCreated();
 			context.Database.Migrate();
 			return app;
 		}

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Teledoc.API.DTO;
 using Teledoc.Application.Commands;
 using Teledoc.Application.Queries;
-using Teledoc.Application.QueryObjects;
+using Teledoc.Application.Results;
 using Teledoc.Infrastructure.Entities;
 using static Teledoc.Application.Commands.ClientUpdateCommand;
 
@@ -25,7 +25,7 @@ namespace Teledoc.API.Controllers
 		{
 			var query = new GetAllProductsInfosQuery();
 
-			IEnumerable<Client> result = await _mediator.Send(query);
+			CommandResult result = await _mediator.Send(query);
 			return result switch
 			{
 				not null => Ok(result),
@@ -38,7 +38,7 @@ namespace Teledoc.API.Controllers
 		{
 			var query = new GetClientByIdQuery(id);
 
-			Teledoc.Infrastructure.Entities.Client result = await _mediator.Send(query);
+			CommandResult result = await _mediator.Send(query);
 			return result switch
 			{
 				not null => Ok(result),
@@ -49,33 +49,67 @@ namespace Teledoc.API.Controllers
 		[HttpPost]
 		public async Task<ActionResult<Client>> AddClient(CreateClientDTO dto)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var founders = dto.Founders
 				.Select(f => new FounderCreateCommand(f.INN, f.FullName))
 				.ToList();
 
-			var command = new ClientCreateCommand(dto.INN, dto.Name, dto.ClientType, founders);
+			var command = new ClientCreateCommand(dto.INN, dto.Name, 
+				dto.ClientType, founders);
+
 			var result = await _mediator.Send(command);
-			return Ok(result);
+
+			return result switch
+			{
+				not null => Ok(result),
+				null => NotFound()
+			};
 		}
 
 		[HttpPut("{id}")]
 		public async Task<IActionResult> UpdateClient(UpdateClientDTO dto)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var founders = dto.Founders
 				.Select(f => new FounderUpdateCommand(f.INN, f.FullName))
 				.ToList();
 
-			var command = new ClientUpdateCommand(dto.Id, dto.INN, dto.Name, dto.ClientType, founders);
-			await _mediator.Send(command);
-			return NoContent();
+			var command = new ClientUpdateCommand(dto.Id, dto.INN, dto.Name, 
+				dto.ClientType, founders);
+
+			var result = await _mediator.Send(command);
+
+			return result switch
+			{
+				not null => Ok(result),
+				null => NotFound()
+			};
 		}
 
 		[HttpDelete("{id}")]
 		public async Task<IActionResult> DeleteClient(int id)
 		{
+			if (!ModelState.IsValid)
+			{
+				return BadRequest(ModelState);
+			}
+
 			var command = new ClientDeleteCommand(id);
-			await _mediator.Send(command);
-			return NoContent();
+			var result = await _mediator.Send(command);
+
+			return result switch
+			{
+				not null => Ok(result),
+				null => NotFound()
+			};
 		}
 	}
 }
