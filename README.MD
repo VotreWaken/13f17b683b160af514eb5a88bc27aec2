@@ -64,9 +64,7 @@ API доступен по адресу: https://localhost:7110/swagger/index.htm
 При возникновении ошибок очистите существующие сертификаты и создайте их заново
 
 ```
-
 dotnet dev-certs https --clean
-
 ```
 
 # Requirements
