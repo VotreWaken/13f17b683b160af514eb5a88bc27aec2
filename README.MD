@@ -35,7 +35,8 @@ dotnet dev-certs https --export-path ./https/aspnetapp.pfx -p 12345678
 
 ```bash
 
-docker-compose
+docker-compose build
+docker-compose up -d 
 
 ```
 
@@ -44,6 +45,14 @@ docker-compose
 ```bash 
 
 dotnet ef database update --project Teledoc.Infrastructure/Teledoc.Infrastructure.csproj --startup-project Teledoc.API/Teledoc.API.csproj
+
+```
+
+Запуск API:
+
+```bash
+
+docker-compose up -d 
 
 ```
 
