@@ -36,6 +36,8 @@ namespace Teledoc.Application.Commands
 
 				await UpdateFoundersAsync(clientEntity, request.Founders);
 
+				clientEntity.UpdatedAt = DateTime.UtcNow;
+
 				await _clientRepository.UpdateClientAsync(clientEntity);
 
 				return CommandResult.Success();

@@ -11,11 +11,7 @@ namespace Teledoc
 
 			var configuration = builder.Configuration;
 
-			builder.Services.AddControllers()
-				.AddJsonOptions(options =>
-				{
-					options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve;
-				});
+			builder.Services.AddControllers();
 
 			builder.Services.AddCustomServices(configuration);
 			builder.Services.AddCorsPolicy();

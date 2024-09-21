@@ -1,15 +1,23 @@
-# Teledoc 
-
+# Teledoc
 Веб-сервис (API) для работы с клиентами, включая юридические лица (ЮЛ) и индивидуальных предпринимателей (ИП), с поддержкой операций CRUD. ЮЛ могут иметь нескольких учредителей.
 
-- Разработка: ASP.NET Core
-- Документация API: OpenAPI (Swagger)
-- СУБД: MS SQL (на базе Docker)
-- ORM: Entity Framework Core (Code First)
+Разработка: ASP.NET Core
+Документация API: OpenAPI (Swagger)
+СУБД: MS SQL (на базе Docker)
+ORM: Entity Framework Core (Code First)
+
 
 # Build 
 
-Создание сертификата для HTTPS:
+Перейдите в корневую директорию 
+
+```
+
+cd Teledoc
+
+```
+
+Создайте сертификат для работы с HTTPS протоколом
 
 ```bash
 
@@ -21,7 +29,7 @@ dotnet dev-certs https --trust
 
 ```bash
 
-dotnet dev-certs https --export-path ~/.aspnet/https/aspnetapp.pfx -p 12345678
+dotnet dev-certs https --export-path ./https/aspnetapp.pfx -p 12345678
 
 ```
 
@@ -29,10 +37,10 @@ dotnet dev-certs https --export-path ~/.aspnet/https/aspnetapp.pfx -p 12345678
 
 ```bash
 
-docker-compose build
-docker-compose up -d 
+docker-compose
 
 ```
+
 Применение миграций базы данных:
 
 ```bash 
@@ -41,17 +49,18 @@ dotnet ef database update --project Teledoc.Infrastructure/Teledoc.Infrastructur
 
 ```
 
-Запуск API:
+### Доступ к API
 
-```bash
+API Working on https://localhost:7110/swagger/index.html
 
-docker-compose up -d 
+
+При возникновении ошибок очистите существующие сертификаты и создайте их заново
 
 ```
 
-### Доступ к API
+dotnet dev-certs https --clean
 
-API доступен по адресу: https://localhost:7110/swagger/index.html
+```
 
 # Requirements
 
@@ -65,9 +74,5 @@ API доступен по адресу: https://localhost:7110/swagger/index.htm
 - DDD
 - Swagger Open API endpoint
 - MediatR
-- AutoMapper
+[-] CQRS implementation on Commands, Queries and Projections
 - Dockerfile and Docker Compose (YAML) file for environmental setup
-
-# TODO 
-
-- CQRS implementation on Commands, Queries and Projections

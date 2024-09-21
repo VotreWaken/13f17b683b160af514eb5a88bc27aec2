@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Teledoc.Application.Mappings;
 using Teledoc.Application.Results;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
 using Teledoc.Infrastructure.Repository;
@@ -18,7 +19,11 @@ namespace Teledoc.Application.Queries
 		{
 			try
 			{
-				return CommandResult.Success(await _clientRepository.GetAllClientsAsync());
+				var clients = await _clientRepository.GetAllClientsAsync();
+
+				var clientDtos = clients.Select(client => ClientEntityToDTOMapper.ToDto(client)).ToList();
+
+				return CommandResult.Success(clientDtos);
 			}
 			catch (DomainException ex)
 			{

@@ -6,11 +6,11 @@ namespace Teledoc.Application.QueryObjects
 	public class ClientInfo
 	{
 		public int Id { get; set; }
-		public INN INN { get; set; }
+		public string INN { get; set; }
 		public string Name { get; set; } = string.Empty;
-		public ClientType ClientType { get; set; }
-		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-		public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-		public List<Teledoc.Infrastructure.Entities.Founder> Founders { get; set; } = new List<Teledoc.Infrastructure.Entities.Founder>();
+		public string ClientType { get; set; }
+		public string CreatedAt { get; set; }
+		public string UpdatedAt { get; set; }
+		public List<FounderInfo> Founders { get; set; } = new List<FounderInfo>();
 	}
 }

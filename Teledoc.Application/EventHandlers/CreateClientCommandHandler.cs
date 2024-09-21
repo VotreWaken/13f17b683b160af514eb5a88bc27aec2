@@ -1,12 +1,13 @@
 ﻿using MediatR;
 using Teledoc.Application.Commands;
+using Teledoc.Application.Mappings;
 using Teledoc.Application.Results;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
 using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.EventHandlers
 {
-	public class CreateClientCommandHandler : IRequestHandler<ClientCreateCommand, CommandResult>
+    public class CreateClientCommandHandler : IRequestHandler<ClientCreateCommand, CommandResult>
 	{
 		private readonly IClientRepository _clientRepository;
 		private readonly IFounderRepository _founderRepository;
