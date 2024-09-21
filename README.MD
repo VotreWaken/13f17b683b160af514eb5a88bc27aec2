@@ -1,10 +1,10 @@
 # Teledoc
 Веб-сервис (API) для работы с клиентами, включая юридические лица (ЮЛ) и индивидуальных предпринимателей (ИП), с поддержкой операций CRUD. ЮЛ могут иметь нескольких учредителей.
 
-Разработка: ASP.NET Core
-Документация API: OpenAPI (Swagger)
-СУБД: MS SQL (на базе Docker)
-ORM: Entity Framework Core (Code First)
+- Разработка: ASP.NET Core
+- Документация API: OpenAPI (Swagger)
+- СУБД: MS SQL (на базе Docker)
+- ORM: Entity Framework Core (Code First)
 
 
 # Build 
@@ -12,9 +12,7 @@ ORM: Entity Framework Core (Code First)
 Перейдите в корневую директорию 
 
 ```
-
 cd Teledoc
-
 ```
 
 Создайте сертификат для работы с HTTPS протоколом
@@ -51,7 +49,7 @@ dotnet ef database update --project Teledoc.Infrastructure/Teledoc.Infrastructur
 
 ### Доступ к API
 
-API Working on https://localhost:7110/swagger/index.html
+API доступен по адресу: https://localhost:7110/swagger/index.html
 
 
 При возникновении ошибок очистите существующие сертификаты и создайте их заново
