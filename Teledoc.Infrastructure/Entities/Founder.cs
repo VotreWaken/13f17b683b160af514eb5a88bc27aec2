@@ -11,7 +11,7 @@ namespace Teledoc.Infrastructure.Entities
 
 		[Required]
 		[StringLength(12)]
-		public string INN { get; set; }
+		public string INN { get; set; } = string.Empty;
 
 		[Required]
 		[StringLength(255)]
