@@ -31,7 +31,7 @@
 
 		public static ClientType FromString(string type)
 		{
-			Console.WriteLine($"Type Value: {type}");
+			Console.WriteLine($"From String: {type} ");
 
 			if (string.IsNullOrEmpty(type))
 			{
@@ -49,6 +49,8 @@
 		public static ClientType FromValue(int value)
 		{
 			Console.WriteLine($"Mapping ClientTypeEnum: {value}");
+			ClientTypeEnum val = (ClientTypeEnum)value;
+			Console.WriteLine($"Val: {val}");
 			return FromEnum((ClientTypeEnum)value);
 		}
 

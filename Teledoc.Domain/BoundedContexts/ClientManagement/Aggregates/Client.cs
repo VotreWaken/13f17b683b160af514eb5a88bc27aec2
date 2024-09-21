@@ -24,11 +24,7 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 
 			Name = name;
 
-			Console.WriteLine($"Before Assign Client Type: {clientType}");
-
 			ClientType = ClientType.FromString(clientType);
-
-			Console.WriteLine($"After Assign Client Type: {ClientType}");
 
 			if (_businessLogicErrors?.Any() == true)
 				throw new DomainBusinessLogicException(_businessLogicErrors);
@@ -42,11 +38,7 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 
 			Name = name;
 
-			Console.WriteLine($"Before Int Assign Client Type: {clientType}");
-
 			ClientType = ClientType.FromValue(clientType);
-
-			Console.WriteLine($"After Int Assign Client Type: {ClientType}");
 
 			if (_businessLogicErrors?.Any() == true)
 				throw new DomainBusinessLogicException(_businessLogicErrors);
@@ -78,6 +70,16 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 			UpdatedAt = DateTime.UtcNow;
 
 			RaiseEvent(new ClientUpdatedEvent(Id, Name, INN, ClientType, UpdatedAt));
+		}
+
+		public void AddFounder(Founder founder)
+		{
+			Founders.Add(founder);
+		}
+
+		public void RemoveFounder(Founder founder)
+		{
+			Founders.Remove(founder);
 		}
 
 		public void DeleteClient()

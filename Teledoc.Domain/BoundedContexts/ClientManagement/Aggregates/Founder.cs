@@ -14,16 +14,16 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 
 		#region Aggregate Methods
 
-		public Founder(INN inn, string firstname, string lastname, string patronymic)
+		public Founder(string inn, string firstname, string lastname, string patronymic)
 		{
-			INN = inn;
+			INN = (INN)CheckAndAssign(INN.Create(inn));
 			FullName = (UserFullName)CheckAndAssign(UserFullName.Create(firstname, lastname, patronymic));
 			RaiseEvent(new FounderCreatedEvent(Id, INN, FullName, CreatedAt));
 		}
 
-		public void UpdateFounder(INN inn, string firstname, string lastname, string patronymic)
+		public void UpdateFounder(string inn, string firstname, string lastname, string patronymic)
 		{
-			INN = inn;
+			INN = (INN)CheckAndAssign(INN.Create(inn));
 			FullName = (UserFullName)CheckAndAssign(UserFullName.Create(firstname, lastname, patronymic));
 			UpdatedAt = DateTime.UtcNow;
 			RaiseEvent(new FounderUpdatedEvent(Id, INN, FullName, UpdatedAt));
