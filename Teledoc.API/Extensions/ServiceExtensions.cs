@@ -1,5 +1,4 @@
 ﻿using Teledoc.Application.Commands;
-using Teledoc.Application.Mappings;
 using Teledoc.Infrastructure.Configuration;
 using Teledoc.Infrastructure.Repository;
 
@@ -17,11 +16,6 @@ namespace Teledoc.API.Extensions
 
 			services.AddTransient<IClientRepository, ClientRepository>();
 			services.AddTransient<IFounderRepository, FounderRepository>();
-		}
-
-		public static void AddAutoMapper(this IServiceCollection services)
-		{
-			services.AddAutoMapper(typeof(MappingClient));
 		}
 
 		public static void AddCorsPolicy(this IServiceCollection services)

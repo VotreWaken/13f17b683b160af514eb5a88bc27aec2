@@ -23,12 +23,12 @@ namespace Teledoc.API.Controllers
 		[HttpGet]
 		public async Task<ActionResult<IEnumerable<Client>>> GetAllClientsQuery()
 		{
-			var query = new GetAllProductsInfosQuery();
+			var query = new GetAllClientsInfoQuery();
 
 			CommandResult result = await _mediator.Send(query);
 			return result switch
 			{
-				not null => Ok(result),
+				not null => Ok(result.SuccessObject),
 				null => NotFound()
 			};
 		}
@@ -41,7 +41,7 @@ namespace Teledoc.API.Controllers
 			CommandResult result = await _mediator.Send(query);
 			return result switch
 			{
-				not null => Ok(result),
+				not null => Ok(result.SuccessObject),
 				null => NotFound()
 			};
 		}
@@ -65,7 +65,7 @@ namespace Teledoc.API.Controllers
 
 			return result switch
 			{
-				not null => Ok(result),
+				not null => Ok(result.SuccessObject),
 				null => NotFound()
 			};
 		}
@@ -89,7 +89,7 @@ namespace Teledoc.API.Controllers
 
 			return result switch
 			{
-				not null => Ok(result),
+				not null => Ok(result.SuccessObject),
 				null => NotFound()
 			};
 		}
@@ -107,7 +107,7 @@ namespace Teledoc.API.Controllers
 
 			return result switch
 			{
-				not null => Ok(result),
+				not null => Ok(result.SuccessObject),
 				null => NotFound()
 			};
 		}

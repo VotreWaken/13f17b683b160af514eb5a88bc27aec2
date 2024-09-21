@@ -18,7 +18,6 @@ namespace Teledoc
 				});
 
 			builder.Services.AddCustomServices(configuration);
-			builder.Services.AddAutoMapper();
 			builder.Services.AddCorsPolicy();
 
 			builder.Services.AddEndpointsApiExplorer();

@@ -7,8 +7,15 @@ namespace Teledoc.API.Extensions
 {
 	public static class ClientSqlServerServiceExtensions
 	{
-		public static IServiceCollection AddClientServices(this IServiceCollection services, ClientConfiguration settings)
+		public static IServiceCollection AddClientServices(this 
+			IServiceCollection services, ClientConfiguration settings)
 		{
+			if (settings == null)
+			{
+				throw new ArgumentNullException(nameof(settings), 
+					"Client configuration cannot be null.");
+			}
+
 			var connectionString = new SqlConnectionStringBuilder()
 			{
 				DataSource = $"{settings.Url},{settings.Port}",
@@ -29,7 +36,8 @@ namespace Teledoc.API.Extensions
 		}
 
 
-		public static IApplicationBuilder UseClientSqlServerMigration(this IApplicationBuilder app, ClientDbContext context)
+		public static IApplicationBuilder UseClientSqlServerMigration
+			(this IApplicationBuilder app, ClientDbContext context)
 		{
 			context.Database.Migrate();
 			return app;
