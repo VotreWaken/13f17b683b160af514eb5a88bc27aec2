@@ -1,30 +1,24 @@
-﻿using AutoMapper;
-using Teledoc.Application.Commands;
-using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
-using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
-using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
-namespace Teledoc.Application.Mappings
+﻿using Teledoc.Infrastructure.Entities;
+
+namespace Teledoc.Application
 {
-	public class MappingClient : Profile
+	public static class ClientTypeMapper
 	{
-		public MappingClient()
+		public static ClientType ToEntity(Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic.ClientTypeEnum clientTypeEnum)
 		{
-			CreateMap<Client, Teledoc.Infrastructure.Entities.Client>()
-				.ForMember(dest => dest.INN, opt => opt.MapFrom(src => src.INN.ToString()))
-				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-				.ForMember(dest => dest.ClientTypeId, opt => opt.MapFrom(src => (int)src.ClientType.Value))
-				.ForMember(dest => dest.Id, opt => opt.Ignore())
-				.ForMember(dest => dest.ClientType, opt => opt.Ignore());
-
-			CreateMap<Teledoc.Infrastructure.Entities.Client, Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates.Client>()
-				.ForMember(dest => dest.INN, opt => opt.MapFrom(src => INN.Create(src.INN)))
-				.ForMember(dest => dest.ClientType, opt => opt.MapFrom(src => ClientType.FromValue(src.ClientTypeId)))
-				.ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name));
-
-			CreateMap<FounderCreateCommand, Teledoc.Infrastructure.Entities.Founder>()
-				.ForMember(dest => dest.INN, opt => opt.MapFrom(src => src.INN))
-				.ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.FullName));
+			return new ClientType
+			{
+				Id = (int)clientTypeEnum,
+				Name = clientTypeEnum.ToString()
+			};
 		}
-
+		public static Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic.ClientTypeEnum ToEnum(ClientType clientTypeEntity)
+		{
+			if (Enum.IsDefined(typeof(Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic.ClientTypeEnum), clientTypeEntity.Id))
+			{
+				return (Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic.ClientTypeEnum)clientTypeEntity.Id;
+			}
+			throw new ArgumentException("Invalid ID for ClientTypeEnum", nameof(clientTypeEntity));
+		}
 	}
 }

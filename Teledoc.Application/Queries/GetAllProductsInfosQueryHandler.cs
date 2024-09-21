@@ -5,16 +5,16 @@ using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.Queries
 {
-	public class GetAllProductsInfosQueryHandler : IRequestHandler<GetAllProductsInfosQuery, CommandResult>
+	public class GetAllClientsInfoQueryHandler : IRequestHandler<GetAllClientsInfoQuery, CommandResult>
 	{
 		private readonly IClientRepository _clientRepository;
 
-		public GetAllProductsInfosQueryHandler(IClientRepository context)
+		public GetAllClientsInfoQueryHandler(IClientRepository context)
 		{
 			_clientRepository = context;
 		}
 
-		public async Task<CommandResult> Handle(GetAllProductsInfosQuery request, CancellationToken cancellationToken)
+		public async Task<CommandResult> Handle(GetAllClientsInfoQuery request, CancellationToken cancellationToken)
 		{
 			try
 			{
