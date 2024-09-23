@@ -1,4 +1,4 @@
-﻿using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
+﻿using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.ClientType;
 using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
 using Teledoc.SharedKernel;
 
@@ -11,8 +11,6 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Events.Client
         public INN UpdatedINN { get; protected set; }
         public ClientType UpdatedClientType { get; protected set; }
         public DateTime UpdatedAt { get; protected set; }
-
-        private ClientUpdatedEvent() { }
 
         public ClientUpdatedEvent(int clientId, string updatedName, 
             INN updatedINN, ClientType updatedClientType, 

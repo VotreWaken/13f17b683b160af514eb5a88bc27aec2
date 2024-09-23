@@ -1,43 +1,52 @@
-﻿using Teledoc.Domain.BoundedContexts.ClientManagement.Events.Client;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Net.Mail;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Events.Client;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
-using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.ClientType;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.ClientType.Enums;
 using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.INN;
 using Teledoc.SharedKernel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 {
     public class Client : AggregateRoot
 	{
-		public int Id { get; private set; }
-		public INN INN { get; private set; }
+		public INN INN { get; private set; } 
 		public string Name { get; private set; } = string.Empty;
 		public ClientType ClientType { get; private set; }
-		public DateTime CreatedAt { get; private set; }
-		public DateTime UpdatedAt { get; private set; }
-		public List<Founder> Founders { get; private set; } = new List<Founder>();
+		public IEnumerable<Founder> Founders { get; private set; } = default!;
+		public int ClientTypeId { get; set; }
+		public Client()
+		{
+		}
 
 		#region Aggregate Methods
 
-		public Client(string inn, string name, string clientType)
+		public Client(string inn, string name, string clientType, IEnumerable<Founder> founders)
 		{
 			INN = (INN)CheckAndAssign(INN.Create(inn));
 
 			Name = name;
-
+			CreatedAt = DateTime.UtcNow;
+			UpdatedAt = DateTime.UtcNow;
 			ClientType = ClientType.FromString(clientType);
 
-			if (_businessLogicErrors?.Any() == true)
+			ClientTypeId = ClientType.ClientTypeIdValue;
+			Founders = founders;
+
+			ClientType = (ClientType)CheckAndAssign(ClientType.ValidateFoundersForClientType(ClientType, founders));
+			
+			if (_businessLogicErrors.Any())
 				throw new DomainBusinessLogicException(_businessLogicErrors);
 
 			RaiseEvent(new ClientCreatedEvent(Id, Name, INN, ClientType, CreatedAt));
 		}
-
 		public Client(string inn, string name, int clientType)
 		{
 			INN = (INN)CheckAndAssign(INN.Create(inn));
-
 			Name = name;
-
 			ClientType = ClientType.FromValue(clientType);
 
 			if (_businessLogicErrors?.Any() == true)
@@ -59,6 +68,22 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 			RaiseEvent(new ClientUpdatedEvent(Id, Name, INN, ClientType, UpdatedAt));
 		}
 
+		public void UpdateClient(string inn, string name, 
+			string clientType, IEnumerable<Founder> founders)
+		{
+			INN = (INN)CheckAndAssign(INN.Create(inn));
+
+			Name = name;
+
+			ClientType.FromString(clientType);
+
+			Founders = founders;
+
+			UpdatedAt = DateTime.UtcNow;
+
+			RaiseEvent(new ClientUpdatedEvent(Id, Name, INN, ClientType, UpdatedAt));
+		}
+
 		public void UpdateClient(string inn, string name, string clientType)
 		{
 			INN = (INN)CheckAndAssign(INN.Create(inn));
@@ -71,17 +96,6 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 
 			RaiseEvent(new ClientUpdatedEvent(Id, Name, INN, ClientType, UpdatedAt));
 		}
-
-		public void AddFounder(Founder founder)
-		{
-			Founders.Add(founder);
-		}
-
-		public void RemoveFounder(Founder founder)
-		{
-			Founders.Remove(founder);
-		}
-
 		public void DeleteClient()
 		{
 			RaiseEvent(new ClientDeletedEvent(Id));

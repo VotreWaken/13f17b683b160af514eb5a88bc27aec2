@@ -4,15 +4,24 @@ using Teledoc.SharedKernel;
 
 namespace Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates
 {
-	public class Founder : AggregateRoot
+    public class Founder : AggregateRoot
 	{
-		public int Id { get; private set; }
+		public Founder()
+		{
+
+		}
 		public INN INN { get; private set; }
 		public UserFullName FullName { get; private set; }
-		public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
-		public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
+		public int ClientId { get; set; }
+		public IEnumerable<Client>? Clients { get; set; } = default!;
 
 		#region Aggregate Methods
+
+		public Founder(string inn, string fullname)
+		{
+			INN = (INN)CheckAndAssign(INN.Create(inn));
+			FullName = (UserFullName)CheckAndAssign(UserFullName.CreateFromString(fullname));
+		}
 
 		public Founder(string inn, string firstname, string lastname, string patronymic)
 		{

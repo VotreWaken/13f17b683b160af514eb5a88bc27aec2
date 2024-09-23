@@ -1,7 +1,10 @@
-﻿using MediatR;
-using Teledoc.Application.Mappings;
+﻿using Mapster;
+using MediatR;
+using Teledoc.Application.QueryObjects;
 using Teledoc.Application.Results;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces;
 using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.Queries
@@ -21,7 +24,7 @@ namespace Teledoc.Application.Queries
 			{
 				var clients = await _clientRepository.GetAllClientsAsync();
 
-				var clientDtos = clients.Select(client => ClientEntityToDTOMapper.ToDto(client)).ToList();
+				var clientDtos = clients.Adapt<List<ClientInfo>>();
 
 				return CommandResult.Success(clientDtos);
 			}

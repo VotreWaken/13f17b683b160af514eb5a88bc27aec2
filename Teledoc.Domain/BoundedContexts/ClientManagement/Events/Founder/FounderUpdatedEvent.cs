@@ -3,7 +3,7 @@ using Teledoc.SharedKernel;
 
 namespace Teledoc.Domain.BoundedContexts.ClientManagement.Events.Founder
 {
-	public class FounderUpdatedEvent : DomainEvent
+    public class FounderUpdatedEvent : DomainEvent
 	{
 		public int FounderId { get; }
 		public INN INN { get; }

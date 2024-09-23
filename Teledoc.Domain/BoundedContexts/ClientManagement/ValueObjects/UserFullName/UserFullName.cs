@@ -1,4 +1,6 @@
-﻿using Teledoc.SharedKernel;
+﻿using System.Collections.Generic;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
+using Teledoc.SharedKernel;
 
 namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite
 {
@@ -17,9 +19,26 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite
             Last = last;
 			Patronymic = patronymic;
 
+			Value = $"{First} {Last} {Patronymic}";
 		}
 
-        public static ValueObjectValidationResult Create(string first, string last, string patronymic)
+		public static ValueObjectValidationResult CreateFromString(string founderString)
+		{
+			var parts = founderString.Split(' ');
+
+			if (parts.Length != 3)
+			{
+				throw new ArgumentException("Founder string must contain FirstName, LastName, and Patronymic separated by spaces.");
+			}
+
+			var firstName = parts[0].Trim();
+			var lastName = parts[1].Trim();
+			var patronymic = parts[2].Trim();
+
+			return new ValueObjectValidationResult(new UserFullName(firstName, lastName, patronymic), null);
+		}
+
+		public static ValueObjectValidationResult Create(string first, string last, string patronymic)
         {
             List<string> businessLogicErrors = new();
 
@@ -32,8 +51,8 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite
 
             return new ValueObjectValidationResult(new UserFullName(first, last, patronymic), null);
         }
-
-        public override string ToString() => $"{First} {Last} {Patronymic}";
+		public string Value { get; private set; }
+		public override string ToString() => $"{First} {Last} {Patronymic}";
         protected override IEnumerable<object> GetEqualityComponents()
         {
             yield return First;

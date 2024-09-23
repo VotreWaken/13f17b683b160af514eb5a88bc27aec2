@@ -1,10 +1,8 @@
 ﻿using MediatR;
-using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic;
-using Teledoc.Infrastructure.Repository;
 using Teledoc.Application.Results;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
-using static Teledoc.Application.Commands.ClientUpdateCommand;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces;
 
 namespace Teledoc.Application.Commands
 {
@@ -29,63 +27,19 @@ namespace Teledoc.Application.Commands
 				{
 					return CommandResult.NotFound(request.Id);
 				}
-				
-				var client = new Client(clientEntity.INN, clientEntity.Name, clientEntity.ClientTypeId);
-
-				client.UpdateClient(request.INN, request.Name, request.ClientType);
-
-				await UpdateFoundersAsync(clientEntity, request.Founders);
 
 				clientEntity.UpdatedAt = DateTime.UtcNow;
+
+				clientEntity.UpdateClient(request.INN, request.Name, request.ClientType, request.Founders);
 
 				await _clientRepository.UpdateClientAsync(clientEntity);
 
 				return CommandResult.Success();
 			}
-			catch (DomainException ex)
+			catch (Exception ex)
 			{
 				return CommandResult.BusinessFail(ex.Message);
 			}
-		}
-
-		private async Task UpdateFoundersAsync(Infrastructure.Entities.Client client, IEnumerable<FounderUpdateCommand> founders)
-		{
-			var existingFounders = client.Founders.ToList();
-
-			foreach (var founder in existingFounders)
-			{
-				if (!founders.Any(f => f.Id == founder.Id))
-				{
-					await _founderRepository.DeleteFounderAsync(founder.Id);
-				}
-			}
-
-			foreach (var founder in founders)
-			{
-				var founderEntity = existingFounders.FirstOrDefault(f => f.Id == founder.Id);
-				if (founderEntity != null)
-				{
-					founderEntity.INN = founder.INN;
-					founderEntity.FullName = founder.FullName;
-					founderEntity.UpdatedAt = DateTime.UtcNow;
-				}
-				else
-				{
-
-					var newFounder = new Infrastructure.Entities.Founder
-					{
-						INN = founder.INN,
-						FullName = founder.FullName,
-						ClientId = client.Id,
-						CreatedAt = DateTime.UtcNow,
-						UpdatedAt = DateTime.UtcNow,
-					};
-					client.Founders.Add(newFounder);
-				}
-			}
-			client.UpdatedAt = DateTime.UtcNow;
-
-			await _clientRepository.UpdateClientAsync(client);
 		}
 	}
 }

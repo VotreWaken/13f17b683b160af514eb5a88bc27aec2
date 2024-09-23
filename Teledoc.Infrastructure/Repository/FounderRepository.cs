@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces;
 using Teledoc.Infrastructure.DataContext;
-using Teledoc.Infrastructure.Entities;
 
 namespace Teledoc.Infrastructure.Repository
 {
@@ -19,10 +20,16 @@ namespace Teledoc.Infrastructure.Repository
 			await _context.SaveChangesAsync();
 		}
 
-		public async Task<List<Founder>> GetFoundersByClientIdAsync(int clientId)
+		public async Task AddFoundersAsync(IEnumerable<Founder> founders)
+		{
+			await _context.Founders.AddRangeAsync(founders);
+			await _context.SaveChangesAsync();
+		}
+
+		public async Task<IEnumerable<Founder>> GetFoundersByClientIdAsync(int clientId)
 		{
 			return await _context.Founders
-				.Where(f => f.ClientId == clientId)
+				.Where(f => f.Id == clientId)
 				.ToListAsync();
 		}
 

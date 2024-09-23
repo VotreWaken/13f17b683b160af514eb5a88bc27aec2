@@ -1,6 +1,6 @@
-﻿using Teledoc.Infrastructure.Entities;
+﻿using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
 
-namespace Teledoc.Infrastructure.Repository
+namespace Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces
 {
 	public interface IClientRepository
 	{

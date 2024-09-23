@@ -2,8 +2,7 @@
 using Teledoc.Application.Commands;
 using Teledoc.Application.Results;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
-using Teledoc.Infrastructure.DataContext;
-using Teledoc.Infrastructure.Repository;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces;
 
 namespace Teledoc.Application.EventHandlers
 {

@@ -1,8 +1,10 @@
-﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
+﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.INN
 {
     public class SerialNumber
     {
         public string Value { get; }
+
+        public SerialNumber() { }
 
         public SerialNumber(string value)
         {

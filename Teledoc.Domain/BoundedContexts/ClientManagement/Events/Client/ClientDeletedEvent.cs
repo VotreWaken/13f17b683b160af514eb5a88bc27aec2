@@ -6,8 +6,6 @@ namespace Teledoc.Domain.BoundedContexts.ClientManagement.Events.Client
     {
         public int ClientId { get; protected set; }
 
-        private ClientDeletedEvent() { }
-
         public ClientDeletedEvent(int clientId)
         {
             AggregateId = clientId;

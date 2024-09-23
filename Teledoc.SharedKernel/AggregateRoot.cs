@@ -2,7 +2,9 @@
 {
 	abstract public class AggregateRoot
 	{
-		public int AggregateId { get; protected set; } = new int();
+		public int Id { get; protected set; }
+		public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+		public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
 		protected List<string> _businessLogicErrors = new List<string>();
 

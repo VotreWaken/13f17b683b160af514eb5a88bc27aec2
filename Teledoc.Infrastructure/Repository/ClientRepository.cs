@@ -1,4 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Threading;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces;
 using Teledoc.Infrastructure.DataContext;
 using Teledoc.Infrastructure.Entities;
 
@@ -14,16 +17,23 @@ namespace Teledoc.Infrastructure.Repository
 
 		public async Task<Client> GetClientByIdAsync(int id)
 		{
-			return await _context.Clients
-								 .Include(c => c.Founders)
-								 .FirstOrDefaultAsync(c => c.Id == id);
+			var client = await _context.Clients
+				.Include(c => c.Founders)
+				.FirstOrDefaultAsync(c => c.Id == id);
+
+			if (client == null)
+				throw new Exception();
+
+			return client;
 		}
 
 		public async Task<IEnumerable<Client>> GetAllClientsAsync()
 		{
-			return await _context.Clients
-								 .Include(c => c.Founders)
-								 .ToListAsync();
+			var clients =  await _context.Clients
+				.Include(c => c.Founders)
+				.ToListAsync();
+
+			return clients;
 		}
 
 		public async Task<int> AddClientAsync(Client client)
@@ -42,6 +52,10 @@ namespace Teledoc.Infrastructure.Repository
 		public async Task DeleteClientAsync(int id)
 		{
 			var client = await GetClientByIdAsync(id);
+
+			if (client == null)
+				throw new Exception();
+
 			if (client != null)
 			{
 				_context.Clients.Remove(client);

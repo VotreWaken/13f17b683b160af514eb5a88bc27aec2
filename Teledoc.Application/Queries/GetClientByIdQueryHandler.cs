@@ -1,7 +1,9 @@
-﻿using MediatR;
-using Teledoc.Application.Mappings;
+﻿using Mapster;
+using MediatR;
+using Teledoc.Application.QueryObjects;
 using Teledoc.Application.Results;
 using Teledoc.Domain.BoundedContexts.ClientManagement.Exceptions;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Interfaces;
 using Teledoc.Infrastructure.Repository;
 
 namespace Teledoc.Application.Queries
@@ -26,7 +28,7 @@ namespace Teledoc.Application.Queries
 					return CommandResult.NotFound(request.Id);
 				}
 
-				var clientDto = ClientEntityToDTOMapper.ToDto(client);
+				var clientDto = client.Adapt<ClientInfo>();
 
 				return CommandResult.Success(clientDto);
 			}

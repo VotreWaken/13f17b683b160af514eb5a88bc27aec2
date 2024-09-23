@@ -1,4 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Teledoc.Domain.BoundedContexts.ClientManagement.Aggregates;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.ClientType;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.ClientType.Enums;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Composite;
+using Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.INN;
 using Teledoc.Infrastructure.Entities;
 
 namespace Teledoc.Infrastructure.DataContext
@@ -13,26 +18,23 @@ namespace Teledoc.Infrastructure.DataContext
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
-			modelBuilder.Entity<Client>()
-				.HasMany(c => c.Founders)
-				.WithOne(f => f.Client)
-				.HasForeignKey(f => f.ClientId);
-
-			modelBuilder.Entity<Client>()
-				.HasOne(c => c.ClientType)
-				.WithMany(ct => ct.Clients)
-				.HasForeignKey(c => c.ClientTypeId)
-				.OnDelete(DeleteBehavior.NoAction);
-
-			modelBuilder.Entity<ClientType>()
-				.Property(ct => ct.Id)
-				.HasColumnName("Id")
-				.ValueGeneratedOnAdd();
+			modelBuilder.ApplyConfigurationsFromAssembly(typeof(ClientDbContext).Assembly);
 
 			modelBuilder.Entity<ClientType>().HasData(
-				new ClientType { Id = 1, Name = "IndividualEntrepreneur" },
-				new ClientType { Id = 2, Name = "LegalEntity" }
-			);
+				new
+				{
+					Value = ClientTypeEnum.IndividualEntrepreneur,
+					Name = "IndividualEntrepreneur",
+					ClientTypeIdValue = (int)ClientTypeEnum.IndividualEntrepreneur,
+				},
+				new
+				{
+					Value = ClientTypeEnum.LegalEntity,
+					Name = "LegalEntity",
+					ClientTypeIdValue = (int)ClientTypeEnum.LegalEntity,
+				});
+
+			base.OnModelCreating(modelBuilder);
 		}
 	}
 }

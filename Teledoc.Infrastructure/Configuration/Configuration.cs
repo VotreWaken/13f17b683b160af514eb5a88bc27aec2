@@ -1,6 +1,6 @@
 ﻿namespace Teledoc.Infrastructure.Configuration
 {
-	public class ClientConfiguration
+	public class Configuration
 	{
 		public string Username { get; set; } = string.Empty;
 		public string Password { get; set; } = string.Empty;

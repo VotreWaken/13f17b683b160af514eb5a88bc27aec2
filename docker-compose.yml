@@ -30,9 +30,6 @@ services:
       - "7110:443"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345678
     volumes:
       - ~/.aspnet/https:/https:ro
     networks:

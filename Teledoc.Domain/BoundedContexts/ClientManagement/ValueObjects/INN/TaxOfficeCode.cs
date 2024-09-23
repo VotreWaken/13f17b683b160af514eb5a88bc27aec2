@@ -1,8 +1,10 @@
-﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.Basic
+﻿namespace Teledoc.Domain.BoundedContexts.ClientManagement.ValueObjects.INN
 {
     public class TaxOfficeCode
     {
         public string Value { get; }
+
+        public TaxOfficeCode() { }
 
         public TaxOfficeCode(string value)
         {
