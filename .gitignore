@@ -1,7 +1,7 @@
 # VS Code
 .vscode/
 
-# Visual Studio
+# Visual Studio 
 .vs/
 *.csproj.user
 *.suo
