@@ -20,7 +20,6 @@ namespace Teledoc.API.Extensions
 				app.UseSwaggerUI();
 			}
 
-			app.UseHttpsRedirection();
 			app.UseAuthorization();
 		}
 	}
