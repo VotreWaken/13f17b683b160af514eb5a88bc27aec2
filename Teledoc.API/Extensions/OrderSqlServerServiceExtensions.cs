@@ -7,7 +7,7 @@ namespace Teledoc.API.Extensions
 {
 	public static class OrderSqlServerServiceExtensions
 	{
-		public static IServiceCollection AddOrderServices(this IServiceCollection services, ClientConfiguration settings)
+		public static IServiceCollection AddOrderServices(this IServiceCollection services, Configuration settings)
 		{
 			var connectionString = new SqlConnectionStringBuilder()
 			{

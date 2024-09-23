@@ -8,7 +8,7 @@ namespace Teledoc.API.Extensions
 	public static class ClientSqlServerServiceExtensions
 	{
 		public static IServiceCollection AddClientServices(this 
-			IServiceCollection services, ClientConfiguration settings)
+			IServiceCollection services, Configuration settings)
 		{
 			if (settings == null)
 			{
