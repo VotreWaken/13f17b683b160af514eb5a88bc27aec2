@@ -12,9 +12,7 @@ ORM: Entity Framework Core (Code First)
 Перейдите в корневую директорию 
 
 ```
-
 cd 13f17b683b160af514eb5a88bc27aec2/
-
 ```
 
 запуск контейнеров Docker:
