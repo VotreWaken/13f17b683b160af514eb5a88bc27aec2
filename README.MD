@@ -19,13 +19,13 @@ cd 13f17b683b160af514eb5a88bc27aec2/
 
 ```bash
 
-docker-compose
+docker-compose up -d 
 
 ```
 
 ### Доступ к API
 
-API доступен по адресу: https://localhost:7110/swagger/index.html
+API доступен по адресу: https://localhost:7091/swagger/index.html
 
 # Features
 
