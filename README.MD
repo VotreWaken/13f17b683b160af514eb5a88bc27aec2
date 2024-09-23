@@ -25,7 +25,7 @@ docker-compose
 
 ### Доступ к API
 
-API Working on https://localhost:7110/swagger/index.html
+API доступен по адресу: https://localhost:7110/swagger/index.html
 
 # Features
 
