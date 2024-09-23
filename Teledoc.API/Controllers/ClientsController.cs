@@ -21,7 +21,7 @@ namespace Teledoc.API.Controllers
 			_mediator = mediator;
 		}
 
-		[HttpGet]
+		[HttpGet("GetClients")]
 		public async Task<ActionResult<IEnumerable<Client>>> GetAllClientsQuery()
 		{
 			var query = new GetAllClientsInfoQuery();
@@ -34,7 +34,7 @@ namespace Teledoc.API.Controllers
 			};
 		}
 
-		[HttpGet("{id}")]
+		[HttpGet("GetClient/{id}")]
 		public async Task<IActionResult> GetClient([FromBody]int id)
 		{
 			var query = new GetClientByIdQuery(id);
@@ -47,7 +47,7 @@ namespace Teledoc.API.Controllers
 			};
 		}
 
-		[HttpPost]
+		[HttpPost("AddClient")]
 		public async Task<ActionResult> AddClient([FromBody] CreateClientDTO dto)
 		{
 
@@ -72,8 +72,8 @@ namespace Teledoc.API.Controllers
 			};
 		}
 
-		[HttpPut("{id}")]
-		public async Task<IActionResult> UpdateClient([FromBody] UpdateClientDTO dto)
+		[HttpPut("UpdateClient/{id}")]
+		public async Task<IActionResult> UpdateClient(UpdateClientDTO dto)
 		{
 			if (!ModelState.IsValid)
 			{
@@ -96,8 +96,8 @@ namespace Teledoc.API.Controllers
 			};
 		}
 
-		[HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteClient([FromBody] int id)
+		[HttpDelete("Delete/{id}")]
+		public async Task<IActionResult> DeleteClient(int id)
 		{
 			if (!ModelState.IsValid)
 			{
