@@ -27,7 +27,7 @@ services:
     environment:
       - ConnectionStrings__DefaultConnection=Server=teledoc-sqlserver;Database=teledoc;User Id=SA;Password=Password1234;TrustServerCertificate=True;
     ports:
-      - "7110:443"
+      - "80:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     volumes:
